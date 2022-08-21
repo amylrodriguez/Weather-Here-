@@ -3,6 +3,7 @@
         <title>
             Weather Here
         </title>
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" 
         crossorigin=""/>
         <style>
@@ -28,16 +29,42 @@ var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 var popup = L.popup()
-		.setLatLng([51.513, -0.09])
-		.setContent('I am a standalone popup.')
-		.openOn(map);
 
-	function onMapClick(e) {
-		popup
-			.setLatLng(e.latlng)
-			.setContent('You clicked the map at ' + e.latlng.toString())
-			.openOn(map);
-	}
+function onMapClick(e) {
+
+
+console.log(e);
+console.log(e.latlng);
+
+url = "https://api.open-meteo.com/v1/forecast?latitude=" + e.latlng["lat"] + 
+  "&longitude=" + e.latlng["lng"] + "&daily=temperature_2m_max&daily=temperature_2m_min&timezone=auto&current_weather=true"
+  + "&temperature_unit=celsius"
+
+console.log(url);
+fetch(url)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data)
+
+function celsiusToFahrenheit (&temperature_2m_max){
+    return (&temperature_2m_max * 9 / 5)+32;
+}
+    popup
+    .setLatLng(e.latlng)
+    .setContent("You clicked the map at " + e.latlng.toString() + 
+      "<ul>" + 
+        "<li>Temperature: " + data["current_weather"]["temperature"] + data["daily_units"]["temperature_2m_max"] + "</li>" +
+        "<li>Temperature: " + data["current_weather"]["temperature"] + data["daily_units"]["temperature_2m_max"] + "</li,         "<li>Hour: " + data["current_weather"]["time"] + " " + data["timezone"] + "</li>" + 
+        "<li>Wind Speed: " + data["current_weather"]["windspeed"] + " km/h</li>" +
+      "</ul>")
+    .openOn(map);
+
+  }
+
+);
+
+
+}
 
 	map.on('click', onMapClick);
     </script>
