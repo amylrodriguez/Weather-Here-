@@ -54,7 +54,7 @@ function celsiusToFahrenheit (temperature){
     .setContent("You clicked the map at " + e.latlng.toString() + 
       "<ul>" + 
         "<li>Temperature: " + data["current_weather"]["temperature"] + data["daily_units"]["temperature_2m_max"] + "</li>" +
-        "<li>Temperature: " + data["current_weather"]["temperature"] + data["daily_units"]["temperature_2m_max"] + "</li,         "<li>Hour: " + data["current_weather"]["time"] + " " + data["timezone"] + "</li>" + 
+        "<li>Temperature: " + celsiusToFahrenheit(data["current_weather"]["temperature"]) + data["daily_units"]["temperature_2m_max"] + "</li>" +     
         "<li>Wind Speed: " + data["current_weather"]["windspeed"] + " km/h</li>" +
       "</ul>")
     .openOn(map);
